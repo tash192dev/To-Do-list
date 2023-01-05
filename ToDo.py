@@ -5,8 +5,11 @@
 import tkinter
 from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk
+
+
 #--------------ToDo-------------------#
-#Add scroll bar to listbox
+#Add scroll bar to listbox - decided not to add because just looks celeaner without it
 #Sort out frames and other geometry stuff 
 #Colours/fonts all that jazz    
 #Compile to .exe ?
@@ -16,26 +19,28 @@ from tkinter import messagebox
 #-------------Boilerplate starter stuff----------------------#
 tk = tkinter
 main = Tk()  # Name of main window
-main.title("Task Checklist ")  # Title
+main.title("To Do")  # Title
 main.geometry("455x300")  # Size of the window in pixels
-main.configure(bg="grey")  # Background colour
+main.configure(bg="pink")  # Background colour
 main.resizable(True, True) #Window can be resized
 
 #----------------Frames--------------#
 entry_frame = LabelFrame(main, text = "Entry")
-entry_frame.grid(row = 0, column= 0, sticky = NW )
+entry_frame.grid(row = 0, column= 0 )
 
 checklist_frame = LabelFrame(main, text = "Checklist")
-checklist_frame.grid(row = 0, column= 1)
+checklist_frame.grid(row = 1, column= 0)
 
 #------------------Entry stuff----------------#
 my_entry = tk.Entry(entry_frame)
 my_entry.grid(row = 0,column = 0)
 #-----------------------Listbox--------------#
-listbox_list = ["a", "b", "c", "d", "e"]
+# listbox_list = ["a", "b", "c", "d", "e"]
+listbox_list = []
 var = tk.Variable(value = listbox_list)
-list_box = tk.Listbox(main, listvariable = var, selectmode = tk.MULTIPLE)
+list_box = tk.Listbox(checklist_frame, listvariable = var, selectmode = tk.MULTIPLE)
 list_box.grid(row = 1, column = 1)
+
 #-----------------------Logic--------------#
 
 def select_item(event):
@@ -45,8 +50,8 @@ def select_item(event):
 
 list_box.bind('<<ListboxSelect>>', select_item)
 
-#this function adds the text from the text entry box as an element in the listbox
-#checks if the text is empty
+#this function command for the Add button. It adds the text from the text entry box as an element in the listbox
+#checks if the text is empty and if the text is in the listbox_list if it is then it pops up a message box with an error 
 def add_something():
     global listbox_list
     item = my_entry.get()
@@ -54,17 +59,14 @@ def add_something():
     if (item in listbox_list) or (item == ""):
         messagebox.showerror("Entry Error", "Entery is duplicate or empty")
         return
-    
+    #inserts the text from the entry as an item at the end of listbox
     list_box.insert(END, item)
     #adding the item to listbox_list so I can use it for input validation
     listbox_list.append(item)
     print(listbox_list)
     
 # this function is the command for the delete button
-# it uses the indicies of all selected items in the listbox with the    
-# curselection method. 
-# 
-
+# it uses the indicies of all selected items in the listbox with the curselection method. 
 def delete_item():
     global listbox_list
     print(listbox_list)
@@ -82,9 +84,8 @@ def delete_item():
         print(listbox_list)
 
 
-
+#-------------Buttons------------------#
 tk.Button(entry_frame, text = "Add", command = add_something).grid(row = 0,column = 1)
-
-delete_button = tk.Button(entry_frame,text =  "Delete", command= delete_item).grid(row = 1, column= 1)
+tk.Button(entry_frame,text =  "Delete", command= delete_item).grid(row = 1, column= 1)
 
 tk.mainloop()
