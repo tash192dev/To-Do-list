@@ -1,4 +1,6 @@
-#daily task checklist
+# This program is a simple to do list task where you can input tasks to add to the list and then select tasks which are done to delte them from the list
+# Talha Ashraf
+# tash.dev@proton.me
 
 import tkinter
 from tkinter import *
@@ -8,6 +10,7 @@ from tkinter import messagebox
 #Sort out frames and other geometry stuff 
 #Colours/fonts all that jazz    
 #Compile to .exe ?
+#link to external database ?????????????
 
 
 #-------------Boilerplate starter stuff----------------------#
