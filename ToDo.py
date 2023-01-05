@@ -3,6 +3,13 @@
 import tkinter
 from tkinter import *
 from tkinter import messagebox
+#--------------ToDo-------------------#
+#Add scroll bar to listbox
+#Sort out frames and other geometry stuff 
+#Colours/fonts all that jazz    
+#Compile to .exe ?
+# 
+
 
 
 #-------------Boilerplate starter stuff----------------------#
