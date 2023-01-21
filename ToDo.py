@@ -21,22 +21,29 @@ main.configure(bg="pink")  # Background colour
 main.resizable(True, True) #Window can be resized
 
 #----------------Frames--------------#
-entry_frame = LabelFrame(main, text = "Entry")
-entry_frame.grid(row = 1, column= 0 )
+entry_frame = LabelFrame(main, text = "Enter Task")
+entry_frame.grid(row = 0, column= 0 )
 
 checklist_frame = LabelFrame(main, text = "List")
-checklist_frame.grid(row = 0, column= 0)
+checklist_frame.grid(row = 2, column= 0)
 
-button_frame = LabelFrame(main)
-button_frame.grid(row= 2, column= 0)
+button_frame = LabelFrame(main, width=200)
+button_frame.grid(row= 1, column= 0)
+
+delete_frame = LabelFrame(main)
+delete_frame.grid(row=3, column=0)
 #------------------Entry stuff----------------#
-my_entry = tk.Entry(entry_frame)
+widget_width = 50
+button_width = 42
+
+my_entry = tk.Entry(entry_frame, width=widget_width, font=(10))
 my_entry.grid(row = 0,column = 0)
 #-----------------------Listbox--------------#
+
 # listbox_list = ["a", "b", "c", "d", "e"]
 listbox_list = []
 var = tk.Variable(value = listbox_list)
-list_box = tk.Listbox(checklist_frame, listvariable = var, selectmode = tk.MULTIPLE)
+list_box = tk.Listbox(checklist_frame, listvariable = var, selectmode = tk.MULTIPLE, width= widget_width)
 list_box.grid(row = 1, column = 1)
 
 #-----------------------Logic--------------#
@@ -52,7 +59,7 @@ list_box.bind('<<ListboxSelect>>', select_item)
 #checks if the text is empty and if the text is in the listbox_list if it is then it pops up a message box with an error 
 def add_something():
     global listbox_list
-    input_text = my_entry.get()
+    input_text = (my_entry.get()).rstrip()
     #Input validation
     if (input_text in listbox_list) or (input_text == ""):
         messagebox.showerror("Entry Error", "Entery is duplicate or empty")
@@ -62,6 +69,7 @@ def add_something():
     #adding the item to listbox_list so I can use it for input validation
     listbox_list.append(input_text)
     print(listbox_list)
+    my_entry.delete(0, END)
     
 # this function is the command for the delete button
 # it uses the indicies of all selected items in the listbox with the curselection method. 
@@ -83,7 +91,7 @@ def delete_item():
 
 
 #-------------Buttons------------------#
-tk.Button(button_frame, text = "Add", command = add_something).grid(row = 0,column = 0)
-tk.Button(button_frame,text =  "Delete", command= delete_item).grid(row = 0, column= 1)
+tk.Button(button_frame, text = "Add", command = add_something, width= button_width).grid(row = 0,column = 0)
+tk.Button(delete_frame,text =  "Delete", command= delete_item, width= button_width).grid(row = 0, column= 1)
 
 tk.mainloop()
