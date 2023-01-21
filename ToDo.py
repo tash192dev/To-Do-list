@@ -5,17 +5,13 @@
 import tkinter
 from tkinter import *
 from tkinter import messagebox
-from tkinter import ttk
-
 
 #--------------ToDo-------------------#
 #Add scroll bar to listbox - decided not to add because just looks celeaner without it
-#Sort out frames and other geometry stuff 
+#Sort out frames and other geometry stuff  
 #Colours/fonts all that jazz    
 #Compile to .exe ?
 #link to external database ?????????????
-
-
 #-------------Boilerplate starter stuff----------------------#
 tk = tkinter
 main = Tk()  # Name of main window
@@ -26,11 +22,13 @@ main.resizable(True, True) #Window can be resized
 
 #----------------Frames--------------#
 entry_frame = LabelFrame(main, text = "Entry")
-entry_frame.grid(row = 0, column= 0 )
+entry_frame.grid(row = 1, column= 0 )
 
-checklist_frame = LabelFrame(main, text = "Checklist")
-checklist_frame.grid(row = 1, column= 0)
+checklist_frame = LabelFrame(main, text = "List")
+checklist_frame.grid(row = 0, column= 0)
 
+button_frame = LabelFrame(main)
+button_frame.grid(row= 2, column= 0)
 #------------------Entry stuff----------------#
 my_entry = tk.Entry(entry_frame)
 my_entry.grid(row = 0,column = 0)
@@ -54,15 +52,15 @@ list_box.bind('<<ListboxSelect>>', select_item)
 #checks if the text is empty and if the text is in the listbox_list if it is then it pops up a message box with an error 
 def add_something():
     global listbox_list
-    item = my_entry.get()
+    input_text = my_entry.get()
     #Input validation
-    if (item in listbox_list) or (item == ""):
+    if (input_text in listbox_list) or (input_text == ""):
         messagebox.showerror("Entry Error", "Entery is duplicate or empty")
         return
     #inserts the text from the entry as an item at the end of listbox
-    list_box.insert(END, item)
+    list_box.insert(END, input_text)
     #adding the item to listbox_list so I can use it for input validation
-    listbox_list.append(item)
+    listbox_list.append(input_text)
     print(listbox_list)
     
 # this function is the command for the delete button
@@ -85,7 +83,7 @@ def delete_item():
 
 
 #-------------Buttons------------------#
-tk.Button(entry_frame, text = "Add", command = add_something).grid(row = 0,column = 1)
-tk.Button(entry_frame,text =  "Delete", command= delete_item).grid(row = 1, column= 1)
+tk.Button(button_frame, text = "Add", command = add_something).grid(row = 0,column = 0)
+tk.Button(button_frame,text =  "Delete", command= delete_item).grid(row = 0, column= 1)
 
 tk.mainloop()
