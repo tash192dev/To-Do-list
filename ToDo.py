@@ -16,7 +16,7 @@ from tkinter import messagebox
 tk = tkinter
 main = Tk()  # Name of main window
 main.title("To Do")  # Title
-main.geometry("455x300")  # Size of the window in pixels
+main.geometry("250x300")  # Size of the window in pixels
 main.configure(bg="pink")  # Background colour
 main.resizable(True, True) #Window can be resized
 
@@ -33,8 +33,8 @@ button_frame.grid(row= 1, column= 0)
 delete_frame = LabelFrame(main)
 delete_frame.grid(row=3, column=0)
 #------------------Entry stuff----------------#
-widget_width = 50
-button_width = 42
+widget_width = 24
+button_width = 26
 
 my_entry = tk.Entry(entry_frame, width=widget_width, font=(10))
 my_entry.grid(row = 0,column = 0)
@@ -51,7 +51,7 @@ list_box.grid(row = 1, column = 1)
 def select_item(event):
     selected_indecies = list_box.curselection()
 
-    print(selected_indecies)
+    # print(selected_indecies)
 
 list_box.bind('<<ListboxSelect>>', select_item)
 
@@ -68,17 +68,17 @@ def add_something():
     list_box.insert(END, input_text)
     #adding the item to listbox_list so I can use it for input validation
     listbox_list.append(input_text)
-    print(listbox_list)
+    # print(listbox_list)
     my_entry.delete(0, END)
     
 # this function is the command for the delete button
 # it uses the indicies of all selected items in the listbox with the curselection method. 
 def delete_item():
     global listbox_list
-    print(listbox_list)
+    # print(listbox_list)
     #contains a reversed list of the currently selected indecies 
     selected_indecies = list(reversed(list_box.curselection()))
-    print(selected_indecies)
+    # print(selected_indecies)
     for i in range(len(selected_indecies)):
         list_index = selected_indecies[i]
         #removing element from the listbox
@@ -87,7 +87,7 @@ def delete_item():
         #debugging statement
         # print(listbox_list.pop(selected_indecies[index]))
         listbox_list.pop(list_index)
-        print(listbox_list)
+        # print(listbox_list)
 
 
 #-------------Buttons------------------#
