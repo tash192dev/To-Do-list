@@ -99,7 +99,9 @@ def delete_item():
         # print(listbox_list.pop(selected_indecies[index]))
         listbox_list.pop(list_index)
         # print(listbox_list)
-    completed_tasks += 1
+    #putting how many tasks have been "completed" or deleted using this function
+    
+    completed_tasks += len(selected_indecies)
     tasks_completed = tk.Label(completed_frame, text = 'Completed Tasks : ' + str(completed_tasks), width = button_width, font = (10))
     tasks_completed.grid(row = 0, column = 0)
 
