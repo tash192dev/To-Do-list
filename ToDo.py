@@ -24,11 +24,13 @@ main.resizable(True, True) #Window can be resized
 entry_frame = LabelFrame(main, text = "Enter Task")
 entry_frame.grid(row = 0, column= 0 )
 
+button_frame = LabelFrame(main)
+button_frame.grid(row= 1, column= 0)
+
+
 checklist_frame = LabelFrame(main, text = "List")
 checklist_frame.grid(row = 2, column= 0)
 
-button_frame = LabelFrame(main)
-button_frame.grid(row= 1, column= 0)
 
 delete_frame = LabelFrame(main)
 delete_frame.grid(row=3, column=0)
@@ -76,6 +78,7 @@ def add_something():
     listbox_list.append(input_text)
     # print(listbox_list)
     my_entry.delete(0, END)
+    my_entry.focus_set()
     
 completed_tasks = 0    
 # this function is the command for the delete button
@@ -100,8 +103,32 @@ def delete_item():
     tasks_completed = tk.Label(completed_frame, text = 'Completed Tasks : ' + str(completed_tasks), width = button_width, font = (10))
     tasks_completed.grid(row = 0, column = 0)
 
+
+
+
+
 #-------------Buttons------------------#
-tk.Button(button_frame, text = "Add", command = add_something, width= button_width, font=(10)).grid(row = 0,column = 0)
+add_button = tk.Button(button_frame, text = "Add", command = add_something, width= button_width, font=(10))
+add_button.grid(row = 0,column = 0)
+
+
+#-----------Keyboard Stuff--------------#
+
+#when the add button is focused we can press the "enter" key to add it
+def on_focus_in(event):
+    event.widget.bind('<Return>', lambda event: add_button.invoke())
+
+def on_focus_out(event):
+    event.widget.unbind('<Return>')
+
+
+add_button.bind('<FocusIn>', on_focus_in)
+add_button.bind('<FocusOut>', on_focus_out)
+
+my_entry.bind('<FocusIn>', on_focus_in)
+my_entry.bind('<FocusOut>', on_focus_out)
+
+
 tk.Button(delete_frame,text =  "Delete", command= delete_item, width= button_width, font=(10)).grid(row = 0, column= 1)
 
 tk.mainloop()
