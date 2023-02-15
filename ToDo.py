@@ -112,13 +112,13 @@ def delete_item():
     completed_tasks += len(selected_indecies)
     completed_updater(completed_tasks)
 
+#this function is used to balance the task counter if I accidentally "complete" somethign i havent yet
 def balance_counter():
     global completed_tasks
     input_text = (my_entry.get()).rstrip()
-    if input_text.isnumeric() and int(completed_tasks) < completed_tasks:
+    if input_text.isnumeric() and (int(input_text) <= completed_tasks):
         completed_tasks -= int(input_text)
         completed_updater(completed_tasks)
-    print("balancebutton")
 
 #-------------Buttons------------------#
 add_button = tk.Button(button_frame, text = "Add", command = add_something, width= button_width, font=(10))
