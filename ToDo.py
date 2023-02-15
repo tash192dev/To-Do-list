@@ -16,7 +16,7 @@ from tkinter import messagebox
 tk = tkinter
 main = Tk()  # Name of main window
 main.title("To Do")  # Title
-main.geometry("250x352")  # Size of the window in pixels
+main.geometry("250x355")  # Size of the window in pixels
 main.configure(bg="pink")  # Background colour
 main.resizable(True, True) #Window can be resized
 
@@ -44,8 +44,8 @@ button_width = 26
 my_entry = tk.Entry(entry_frame, width=widget_width, font=(10))
 my_entry.grid(row = 0,column = 0)
 
-tasks_completed = tk.Label(completed_frame, text = 'Completed Tasks : ', width = button_width, font = (10))
-tasks_completed.grid(row = 0, column = 0)
+# tasks_completed = tk.Label(completed_frame, text = 'Completed Tasks : ', width = button_width - 5, font = (10))
+# tasks_completed.grid(row = 0, column = 2, columnspan = 2)
 #-----------------------Listbox--------------#
 
 # listbox_list = ["a", "b", "c", "d", "e"]
@@ -56,13 +56,22 @@ list_box.grid(row = 1, column = 1)
 
 #-----------------------Logic--------------#
 
-def select_item(event):
-    selected_indecies = list_box.curselection()
+# def select_item(event):
+#     selected_indecies = list_box.curselection()
 
-    # print(selected_indecies)
+#     # print(selected_indecies)
 
-list_box.bind('<<ListboxSelect>>', select_item)
+# list_box.bind('<<ListboxSelect>>', select_item)
 
+
+#this variable will be used by functions to track ammount of completed tasks
+completed_tasks = 0    
+
+#This helper function will display how many tasks have been completed
+def completed_updater(tasks):
+    tasks_completed = tk.Label(completed_frame, text = 'Completed Tasks : ' + str(completed_tasks), width = button_width - 5, font = (10))
+    tasks_completed.grid(row = 0, column = 2, columnspan = 2)
+completed_updater(completed_tasks)
 #this function command for the Add button. It adds the text from the text entry box as an element in the listbox
 #checks if the text is empty and if the text is in the listbox_list if it is then it pops up a message box with an error 
 def add_something():
@@ -80,7 +89,6 @@ def add_something():
     my_entry.delete(0, END)
     my_entry.focus_set()
     
-completed_tasks = 0    
 # this function is the command for the delete button
 # it uses the indicies of all selected items in the listbox with the curselection method. 
 def delete_item():
@@ -102,12 +110,15 @@ def delete_item():
     #putting how many tasks have been "completed" or deleted using this function
     
     completed_tasks += len(selected_indecies)
-    tasks_completed = tk.Label(completed_frame, text = 'Completed Tasks : ' + str(completed_tasks), width = button_width, font = (10))
-    tasks_completed.grid(row = 0, column = 0)
+    completed_updater(completed_tasks)
 
-
-
-
+def balance_counter():
+    global completed_tasks
+    input_text = (my_entry.get()).rstrip()
+    if input_text.isnumeric() and int(completed_tasks) < completed_tasks:
+        completed_tasks -= int(input_text)
+        completed_updater(completed_tasks)
+    print("balancebutton")
 
 #-------------Buttons------------------#
 add_button = tk.Button(button_frame, text = "Add", command = add_something, width= button_width, font=(10))
@@ -131,6 +142,6 @@ my_entry.bind('<FocusIn>', on_focus_in)
 my_entry.bind('<FocusOut>', on_focus_out)
 
 
-tk.Button(delete_frame,text =  "Delete", command= delete_item, width= button_width, font=(10)).grid(row = 0, column= 1)
-
+tk.Button(delete_frame,text =  "Done", command= delete_item, width= button_width, font=(10)).grid(row = 0, column= 1)
+tk.Button(completed_frame, text = 'Balance', command = balance_counter).grid(row = 0, column = 0)
 tk.mainloop()
