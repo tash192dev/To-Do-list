@@ -67,33 +67,40 @@ list_box.grid(row = 1, column = 1)
 #this variable will be used by functions to track ammount of completed tasks
 completed_tasks = 0    
 
-#This helper function will display how many tasks have been completed
+#This helper function will update how many tasks have been completed
 def completed_updater(tasks):
     tasks_completed = tk.Label(completed_frame, text = 'Completed Tasks : ' + str(completed_tasks), width = button_width - 5, font = (10))
     tasks_completed.grid(row = 0, column = 2, columnspan = 2)
 completed_updater(completed_tasks)
 #this function command for the Add button. It adds the text from the text entry box as an element in the listbox
 #checks if the text is empty and if the text is in the listbox_list if it is then it pops up a message box with an error 
-def add_something():
+
+def add_task(task):
+    list_box.insert(END, task)
+    #adding the item to listbox_list so I can use it for input validation
+    listbox_list.append(task)
+
+def add_button_function():
     global listbox_list
     input_text = (my_entry.get()).rstrip()
     #Input validation
     if (input_text in listbox_list) or (input_text == ""):
-        messagebox.showerror("Entry Error", "Entery is duplicate or empty")
+        messagebox.showerror("Entry Error", "Entry is duplicate or empty")
         return
     #inserts the text from the entry as an item at the end of listbox
-    list_box.insert(END, input_text)
-    #adding the item to listbox_list so I can use it for input validation
-    listbox_list.append(input_text)
+    add_task(input_text)
     # print(listbox_list)
     my_entry.delete(0, END)
     my_entry.focus_set()
-    
+
+deleted_tasks = []
 # this function is the command for the delete button
 # it uses the indicies of all selected items in the listbox with the curselection method. 
 def delete_item():
     global completed_tasks
     global listbox_list
+    global deleted_tasks
+    deleted_tasks = []
     # print(listbox_list)
     #contains a reversed list of the currently selected indecies 
     selected_indecies = list(reversed(list_box.curselection()))
@@ -104,15 +111,28 @@ def delete_item():
         list_box.delete(list_index)
         #removing the string from the listbox_list so that input validation doesnt catch removed strings
         #debugging statement
-        # print(listbox_list.pop(selected_indecies[index]))
-        listbox_list.pop(list_index)
-        # print(listbox_list)
+        deleted_tasks.append(listbox_list.pop(list_index))
     #putting how many tasks have been "completed" or deleted using this function
     
     completed_tasks += len(selected_indecies)
     completed_updater(completed_tasks)
 
 #this function is used to balance the task counter if I accidentally "complete" somethign i havent yet
+
+def undo():
+    global deleted_tasks
+    global completed_tasks
+    if(len(deleted_tasks) != 0):
+        completed_tasks -= len(deleted_tasks)
+        completed_updater(completed_tasks)
+        for i in range(len(deleted_tasks)):
+            add_task(deleted_tasks[i])
+        deleted_tasks = []
+
+    
+
+    
+
 def balance_counter():
     global completed_tasks
     input_text = (my_entry.get()).rstrip()
@@ -121,11 +141,11 @@ def balance_counter():
         completed_updater(completed_tasks)
 
 #-------------Buttons------------------#
-add_button = tk.Button(button_frame, text = "Add", command = add_something, width= button_width, font=(10))
+add_button = tk.Button(button_frame, text = "Add", command = add_button_function, width= button_width, font=(10))
 add_button.grid(row = 0,column = 0)
 
 
-#-----------Keyboard Stuff--------------#
+#-----------Keyboard Navigation--------------#
 
 #when the add button is focused we can press the "enter" key to add it
 def on_focus_in(event):
@@ -143,5 +163,5 @@ my_entry.bind('<FocusOut>', on_focus_out)
 
 
 tk.Button(delete_frame,text =  "Done", command= delete_item, width= button_width, font=(10)).grid(row = 0, column= 1)
-tk.Button(completed_frame, text = 'Balance', command = balance_counter).grid(row = 0, column = 0)
+tk.Button(completed_frame, text = "  Undo  ", command = undo).grid(row = 0, column = 0)
 tk.mainloop()
