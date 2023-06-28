@@ -44,28 +44,27 @@ button_width = 26
 my_entry = tk.Entry(entry_frame, width=widget_width, font=(10))
 my_entry.grid(row = 0,column = 0)
 
-# tasks_completed = tk.Label(completed_frame, text = 'Completed Tasks : ', width = button_width - 5, font = (10))
-# tasks_completed.grid(row = 0, column = 2, columnspan = 2)
 #-----------------------Listbox--------------#
+try:
+    #try to read the tasks file if it exists and put the contents into the listbox_list 
+    with open("tasks.txt", "r") as file:
+        listbox_list = file.read().splitlines()
 
-# listbox_list = ["a", "b", "c", "d", "e"]
-listbox_list = []
+except:
+    #if the file cannot be read then create a file called tasks.txt
+    with open("tasks.txt", "w") as file:
+        file.write("")
+    listbox_list = []
+
+# listbox_list = []
 var = tk.Variable(value = listbox_list)
 list_box = tk.Listbox(checklist_frame, listvariable = var, selectmode = tk.MULTIPLE, width= widget_width, font=(10))
 list_box.grid(row = 1, column = 1)
 
 #-----------------------Logic--------------#
 
-# def select_item(event):
-#     selected_indecies = list_box.curselection()
-
-#     # print(selected_indecies)
-
-# list_box.bind('<<ListboxSelect>>', select_item)
-
-
 #this variable will be used by functions to track ammount of completed tasks
-completed_tasks = 0    
+completed_tasks = len(listbox_list)
 
 #This helper function will update how many tasks have been completed
 def completed_updater(tasks):
@@ -92,6 +91,12 @@ def add_button_function():
     # print(listbox_list)
     my_entry.delete(0, END)
     my_entry.focus_set()
+    
+    #appending file with the new task
+    with open("tasks.txt", "a") as file:
+        file.write(input_text + "\n")
+
+    
 
 deleted_tasks = []
 # this function is the command for the delete button
@@ -117,8 +122,15 @@ def delete_item():
     completed_tasks += len(selected_indecies)
     completed_updater(completed_tasks)
 
-#this function is used to balance the task counter if I accidentally "complete" somethign i havent yet
+    #overriting the file with the new listbox_list
+    with open("tasks.txt", "w") as file:
+        for i in range(len(listbox_list)):
+            file.write(listbox_list[i] + "\n")
 
+
+#this function reverses the last delete operation
+#if only one task was deleted then it will only add that one task back
+#if mutiple tasks were deleted then it will add all of them back
 def undo():
     global deleted_tasks
     global completed_tasks
@@ -128,17 +140,36 @@ def undo():
         for i in range(len(deleted_tasks)):
             add_task(deleted_tasks[i])
         deleted_tasks = []
+    with open("tasks.txt", "w") as file:
+        for i in range(len(listbox_list)):
+            file.write(listbox_list[i] + "\n")
 
-    
 
-    
+#if the file does not exist then create a file called tasks.txt and write the listbox_list to it
+# #if it already exists then read it in and put it in the listbox_list
+# try:
+#     with open("tasks.txt", "r") as file:
+#         listbox_list = file.read().splitlines()
 
-def balance_counter():
-    global completed_tasks
-    input_text = (my_entry.get()).rstrip()
-    if input_text.isnumeric() and (int(input_text) <= completed_tasks):
-        completed_tasks -= int(input_text)
-        completed_updater(completed_tasks)
+#         print(listbox_list)
+#         for i in range(len(listbox_list)):
+#             add_task(listbox_list[i])
+#         print(listbox_list)
+# except:
+#     with open("tasks.txt", "w") as file:
+#         for i in range(len(listbox_list)):
+#             file.write(listbox_list[i] + "\n")
+            
+# # #this function is called when the window is closed. It writes the listbox_list to the file
+# # def on_closing():
+# #     with open("tasks.txt", "w") as file:
+# #         for i in range(len(listbox_list)):
+#             file.write(listbox_list[i] + "\n")
+#     main.destroy()
+
+
+
+
 
 #-------------Buttons------------------#
 add_button = tk.Button(button_frame, text = "Add", command = add_button_function, width= button_width, font=(10))
@@ -147,7 +178,7 @@ add_button.grid(row = 0,column = 0)
 
 #-----------Keyboard Navigation--------------#
 
-#when the add button is focused we can press the "enter" key to add it
+#when the add button is focused we can press the "enter" key to press the add button
 def on_focus_in(event):
     event.widget.bind('<Return>', lambda event: add_button.invoke())
 
