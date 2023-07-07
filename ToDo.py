@@ -6,40 +6,53 @@ import tkinter
 from tkinter import *
 from tkinter import messagebox
 
-#-------------Boilerplate starter stuff----------------------#
+#-------------Starter code----------------------#
 tk = tkinter
 main = Tk()  # Name of main window
 main.title("To Do")  # Title
-main.geometry("250x420")  # Size of the window in pixels
-main.configure(bg="pink")  # Background colour
+main.geometry("245x380")  # Size of the window in pixels
+main.configure(bg="white")  # Background colour
 main.resizable(True, True) #Window can be resized
 
 #----------------Frames--------------#
-entry_frame = LabelFrame(main, text = "Enter Task")
-entry_frame.grid(row = 0, column= 0 )
+entry_frame = tk.LabelFrame(main, text="Enter Task")
+entry_frame.grid(row=0, column=0, sticky="nsew")
 
-add_button_frame = LabelFrame(main)
-add_button_frame.grid(row= 1, column= 0)
+add_button_frame = tk.LabelFrame(main)
+add_button_frame.grid(row=1, column=0, sticky="nsew")
 
+checklist_frame = tk.LabelFrame(main, text="List")
+checklist_frame.grid(row=2, column=0, sticky="nsew")
 
-checklist_frame = LabelFrame(main, text = "List")
-checklist_frame.grid(row = 2, column= 0)
+done_button_frame = tk.LabelFrame(main)
+done_button_frame.grid(row=3, column=0, sticky="nsew")
 
+completed_tasks_counter_frame = tk.LabelFrame(main)
+completed_tasks_counter_frame.grid(row=4, column=0, sticky="nsew")
 
-done_button_frame = LabelFrame(main)
-done_button_frame.grid(row=3, column=0)
+undo_frame = tk.LabelFrame(main)
+undo_frame.grid(row=5, column=0, sticky="nsew")
 
-completed_tasks_counter_frame = LabelFrame(main)
-completed_tasks_counter_frame.grid(row = 4, column = 0)
+#------------------Dynamic sizing----------------#
+Grid.rowconfigure(main, 0, weight=1)
+Grid.rowconfigure(main, 1, weight=1)
+Grid.rowconfigure(main, 2, weight=1)
+Grid.rowconfigure(main, 3, weight=1)
+Grid.rowconfigure(main, 4, weight=1)
+Grid.rowconfigure(main, 5, weight=1)
+Grid.columnconfigure(main, 0, weight = 1)
 
-undo_frame = LabelFrame(main)
-undo_frame.grid(row = 5, column = 0)
-#------------------Entry stuff----------------#
+Grid.rowconfigure(entry_frame, 0, weight=1)
+Grid.columnconfigure(entry_frame, 0, weight = 1)
+
+# entry_frame.grid_propagate(False)
+
+#------------------Entry widgets----------------#
 widget_width = 27
 button_width = 26
 
 my_entry = tk.Entry(entry_frame, width=widget_width, font=(10))
-my_entry.grid(row = 0,column = 0)
+my_entry.grid(row=0, column=0, sticky="nsew")
 
 #-----------------------Listbox--------------#
 try:
@@ -66,7 +79,7 @@ completed_tasks_counter = 0
 #This function changes the number of the variable that counts completed tasks
 def tasks_counter_updater():
     tasks_completed = tk.Label(completed_tasks_counter_frame, text = 'Completed Tasks : ' + str(completed_tasks_counter), width = button_width, font = (10))
-    tasks_completed.grid(row = 0, column = 0, columnspan = 2)
+    tasks_completed.grid(row = 0, column = 0, columnspan = 2, sticky="nsew")
 
 #this function is called when the program starts to set the counter to the correct value
 tasks_counter_updater()
@@ -165,12 +178,14 @@ def undo():
 
 #-------------Buttons------------------#
 add_button = tk.Button(add_button_frame, text = "Add", command = add_button_function, width= button_width, font=(10))
-add_button.grid(row = 0,column = 0)
+add_button.grid(row = 0,column = 0, sticky="nsew")
 
-tk.Button(done_button_frame,text =  "Done", command= done_function, width= button_width, font=(10)).grid(row = 0, column= 1)
+tk.Button(done_button_frame,text =  "Done", command= done_function, width= button_width, font=(10)).grid(row = 0, column= 1, sticky="nsew")
+width = main.winfo_width()
+print(width)
 
-tk.Button(undo_frame, text = "Undo", command = undo, width= button_width - 10).grid(row = 0, column = 0)
-tk.Button(undo_frame, text = "Delete", command = delete_item, width= button_width - 10).grid(row = 0, column = 1)
+tk.Button(undo_frame, text = "Undo", command = undo, width= button_width - 10).grid(row = 0, column = 0, sticky="nsew")
+tk.Button(undo_frame, text = "Delete", command = delete_item, width= button_width - 10).grid(row = 0, column = 1, sticky="nsew")
 
 
 #-----------Keyboard Navigation--------------#
@@ -188,6 +203,11 @@ add_button.bind('<FocusOut>', on_focus_out)
 
 my_entry.bind('<FocusIn>', on_focus_in)
 my_entry.bind('<FocusOut>', on_focus_out)
+
+main.update()
+width = main.winfo_width()
+
+
 
 
 tk.mainloop()
